@@ -1,5 +1,7 @@
 package com.example.repoviewer.service;
 
+import com.example.repoviewer.data.model.AccessToken;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,11 +14,11 @@ import retrofit2.http.Path;
 public interface GitHubClient {
     @POST("login/oauth/access_token")
     @FormUrlEncoded
-    Call<AccesToekn> getAccessToken(
+    Call<AccessToken> getAccessToken(
             @Field("client_id") String clientId,
             @Field("client_secret") String clientSecret,
-            @Field("code") String code,
-    )
+            @Field("code") String code
+    );
     @GET("/users/{user}/repos")
     Call<List<>>reposForUser(@Path("user") String user);
 }
