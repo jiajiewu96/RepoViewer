@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.repoviewer.BuildConfig;
@@ -68,7 +69,11 @@ public class LoginActivity extends AppCompatActivity {
         accessToken.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                Toast.makeText(LoginActivity.this, "yay!", Toast.LENGTH_SHORT).show();
+                if(isSuccessfulResponse(response) && response.body().getAccessToken() != null){
+                    Toast.makeText(LoginActivity.this, "yay!", Toast.LENGTH_SHORT).show();
+                } else{
+                    Log.d("Response code", Integer.toString(response.code()));
+                }
             }
 
             @Override
@@ -76,5 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "boo!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean isSuccessfulResponse(Response<AccessToken> response) {
+        return response.code() >= 200 && response.code() < 300;
     }
 }

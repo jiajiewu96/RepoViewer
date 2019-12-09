@@ -3,7 +3,7 @@ package com.example.repoviewer.data.model;
 import com.google.gson.annotations.SerializedName;
 
 public class AccessToken {
-    @SerializedName("access_name")
+    @SerializedName("access_token")
     private String accessToken;
     @SerializedName("token_type")
     private String tokenType;
