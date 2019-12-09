@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.repoviewer.BuildConfig;
@@ -26,13 +28,16 @@ public class LoginActivity extends AppCompatActivity {
     private String mGithubSecret = BuildConfig.GITHUB_SECRET;
     private String callbackUrl = "http://example.com/path/";
     private Uri mUri;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mProgressBar = (ProgressBar) findViewById(R.id.login_bar);
         mUri = getIntent().getData();
         if(mUri == null) {
+            mProgressBar.setVisibility(View.VISIBLE);
             Uri githubOauthUrl = Uri.parse(mGithubOauthURL + "?client_id=" + mGithubClientId + "&scope=repo&redirect_uri=" + callbackUrl);
             Intent intent = new Intent(Intent.ACTION_VIEW, githubOauthUrl);
             startActivity(intent);
@@ -70,7 +75,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 if(isSuccessfulResponse(response) && response.body().getAccessToken() != null){
+                    mProgressBar.setVisibility(View.GONE);
                     Toast.makeText(LoginActivity.this, "yay!", Toast.LENGTH_SHORT).show();
+
                 } else{
                     Log.d("Response code", Integer.toString(response.code()));
                 }
