@@ -34,6 +34,10 @@ public class RepoListActivity extends AppCompatActivity {
 
     }
 
+    private void getRepoList(AccessToken accessToken) {
+
+    }
+
     private void getUserLogin(AccessToken accessToken) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("https://api.github.com/")
