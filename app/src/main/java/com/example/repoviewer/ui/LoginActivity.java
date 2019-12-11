@@ -2,6 +2,7 @@ package com.example.repoviewer.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -75,8 +76,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 if(isSuccessfulResponse(response) && response.body().getAccessToken() != null){
+                    Context loginActivityContext = LoginActivity.this;
                     mProgressBar.setVisibility(View.GONE);
-                    Toast.makeText(LoginActivity.this, "yay!", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(getString(R.string.accessTokenKey), response.body());
+                    Intent repoListActivityIntent = new Intent(loginActivityContext, RepoListActivity.class);
+                    repoListActivityIntent.putExtras(bundle);
+                    startActivity(repoListActivityIntent);
 
                 } else{
                     Log.d("Response code", Integer.toString(response.code()));

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RepoViewer</string>
+    <string name="accessTokenKey">ACCESS_TOKEN</string>
 </resources>
