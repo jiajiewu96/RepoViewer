@@ -1,6 +1,7 @@
 package com.example.repoviewer.service;
 
 import com.example.repoviewer.data.model.AccessToken;
+import com.example.repoviewer.data.model.Repository;
 import com.example.repoviewer.data.model.User;
 
 import java.util.List;
@@ -10,7 +11,6 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -29,6 +29,6 @@ public interface GitHubClient {
     @GET("/user")
     Call<User> getUser(@HeaderMap Map<String, String> headers);
 
-//    @GET("/users/{user}/repos")
-//    Call<List<>>reposForUser(@Path("user") String user);
+    @GET("/users/{user}/repos")
+    Call<List<Repository>>reposForUser(@Path("user") String user);
 }
