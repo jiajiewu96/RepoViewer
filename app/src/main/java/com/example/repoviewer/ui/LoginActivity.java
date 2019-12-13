@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.example.repoviewer.BuildConfig;
 import com.example.repoviewer.R;
 import com.example.repoviewer.data.model.AccessToken;
 import com.example.repoviewer.service.GitHubClient;
+import com.example.repoviewer.utils.Consts;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,10 +80,11 @@ public class LoginActivity extends AppCompatActivity {
                 if(isSuccessfulResponse(response) && response.body().getAccessToken() != null){
                     Context loginActivityContext = LoginActivity.this;
                     mProgressBar.setVisibility(View.GONE);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(getString(R.string.accessTokenKey), response.body());
+                    SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(Consts.ACCESS_TOKEN_SHAREDPREF_KEY, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(Consts.ACCESS_TOKEN_KEY, response.body().getAccessToken());
+                    editor.apply();
                     Intent repoListActivityIntent = new Intent(loginActivityContext, RepoListActivity.class);
-                    repoListActivityIntent.putExtras(bundle);
                     startActivity(repoListActivityIntent);
 
                 } else{
@@ -91,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "boo!", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
