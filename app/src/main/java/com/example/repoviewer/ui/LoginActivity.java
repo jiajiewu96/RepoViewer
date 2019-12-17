@@ -82,6 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                     mProgressBar.setVisibility(View.GONE);
                     SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(Consts.ACCESS_TOKEN_SHAREDPREF_KEY, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
+                    if(sharedPreferences.getString(Consts.USER_NAME_KEY, Consts.USER_NAME_NULL).equals(Consts.USER_NAME_NULL)) {
+                        editor.putString(Consts.ACCESS_TOKEN_KEY, response.body().getAccessToken());
+                    } else{
+                        editor.remove(Consts.ACCESS_TOKEN_KEY);
+                        editor.putString(Consts.USER_NAME_KEY, response.body().getAccessToken());
+                    }
                     editor.putString(Consts.ACCESS_TOKEN_KEY, response.body().getAccessToken());
                     editor.apply();
                     Intent repoListActivityIntent = new Intent(loginActivityContext, RepoListActivity.class);

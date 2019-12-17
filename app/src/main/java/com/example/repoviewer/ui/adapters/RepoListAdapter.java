@@ -36,7 +36,13 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
     @Override
     public void onBindViewHolder(@NonNull RepoListViewHolder holder, int position) {
         String title = mRepositories.get(position).getName();
+        String description = mRepositories.get(position).getDescription();
         holder.repoName.setText(title);
+        if(!isNullOrEmpty(description)){
+            holder.repoDescription.setText(description);
+        } else{
+            holder.repoDescription.setText(R.string.description_not_available);
+        }
     }
 
     @Override
@@ -44,12 +50,18 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
         return mRepositories.size();
     }
 
+    private boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
+
     class RepoListViewHolder extends RecyclerView.ViewHolder{
         TextView repoName;
+        TextView repoDescription;
 
         public RepoListViewHolder(@NonNull View itemView) {
             super(itemView);
             repoName = (TextView) itemView.findViewById(R.id.tv_repo_name);
+            repoDescription = (TextView) itemView.findViewById(R.id.tv_repo_description);
         }
     }
 }

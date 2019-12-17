@@ -2,32 +2,23 @@ package com.example.repoviewer.ui;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.repoviewer.R;
-import com.example.repoviewer.data.model.AccessToken;
 import com.example.repoviewer.data.model.Repository;
-import com.example.repoviewer.service.GitHubClient;
-import com.example.repoviewer.utils.Consts;
+import com.example.repoviewer.ui.adapters.RepoListAdapter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.content.Context.MODE_PRIVATE;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +26,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class RepoListFragment extends Fragment {
 
     private Context mContext;
+    private RepoListAdapter mRepoListAdapter;
+    private TextView mErrorTextView;
 
     public static RepoListFragment newInstance(){
         return new RepoListFragment();
@@ -54,46 +47,27 @@ public class RepoListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_repo_list, container, false);
         // Inflate the layout for this fragment
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(Consts.USER_INFO_KEY, MODE_PRIVATE);
-        final SharedPreferences accessTokenPref = mContext.getSharedPreferences(Consts.ACCESS_TOKEN_KEY, MODE_PRIVATE);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-                String accessToken = accessTokenPref.getString(Consts.ACCESS_TOKEN_KEY, Consts.ACCESS_TOKEN_NULL);
-                if(!accessToken.equals(Consts.ACCESS_TOKEN_NULL)) {
-                    getRepoList(accessToken);
-                }
-            }
-        });
-        return inflater.inflate(R.layout.fragment_repo_list, container, false);
+        setupRecyclerViews(rootView);
+        return rootView;
     }
 
-    private void getRepoList(String accessToken) {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("https://api.github.com/")
-                .addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder.build();
-        Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Authorization", " token " + accessToken.trim());
-        GitHubClient gitHubClient = retrofit.create(GitHubClient.class);
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(Consts.USER_INFO_KEY, MODE_PRIVATE);
-        String username = sharedPreferences.getString(Consts.USER_NAME_KEY, "User Not Available");
-        Call<List<Repository>> getUserRepository = gitHubClient.reposForUser(
-                username
-        );
-        getUserRepository.enqueue(new Callback<List<Repository>>() {
-            @Override
-            public void onResponse(Call<List<Repository>> call, Response<List<Repository>> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Repository>> call, Throwable t) {
-
-            }
-        });
+    private void setupRecyclerViews(View rootView) {
+        RecyclerView repoRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_repo_list);
+        mErrorTextView = rootView.findViewById(R.id.tv_error);
+        mRepoListAdapter = new RepoListAdapter();
+        LinearLayoutManager repoListLayoutManager = new LinearLayoutManager(getActivity());
+        repoRecyclerView.setLayoutManager(repoListLayoutManager);
+        repoRecyclerView.setAdapter(mRepoListAdapter);
     }
 
+    public void setRepoList(ArrayList<Repository> repositories){
+        mErrorTextView.setVisibility(View.GONE);
+        mRepoListAdapter.setRepositories(repositories);
+    }
+    public void setErrorTextView(String error){
+        mErrorTextView.setVisibility(View.VISIBLE);
+        mErrorTextView.setText(error);
+    }
 }
