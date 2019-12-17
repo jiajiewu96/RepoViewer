@@ -15,6 +15,7 @@ import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface GitHubClient {
     @Headers("Accept: application/json")
@@ -30,5 +31,9 @@ public interface GitHubClient {
     Call<User> getUser(@HeaderMap Map<String, String> headers);
 
     @GET("/users/{user}/repos")
-    Call<List<Repository>>reposForUser(@Path("user") String user);
+    Call<List<Repository>>reposForUser(
+            @Path("user") String user,
+            @Query("sort") String sort,
+            @Query("direction") String direction
+    );
 }
