@@ -52,21 +52,41 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
             holder.repoDescription.setText(R.string.description_not_available);
         }
     }
-    //TODO: FINISH DATE TIME CONVERTER
     private String convertTime(String updatedDate) {
-        String time;
-        String inputPattern = "YYYY-MM-DD HH:MM:SSZ";
-        DateFormat original = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
-        DateFormat target = new SimpleDateFormat("MM-DD-yyyy", Locale.ENGLISH);
+        String dateTime;
+        String[] splitString = updatedDate.split("T");
+
+        String date = splitString[0];
+        String inputDatePattern = "YYYY-MM-DD";
+        String targetDatePattern = "MM-DD-YYYY";
+
+        String time = splitString[1];
+        String inputTimePattern = "HH:MM:SSZ";
+        String targetTimePattern = "HH:MM";
+        dateTime = simpleDateFormatter(
+                date,
+                targetDatePattern,
+                inputDatePattern
+        ) + simpleDateFormatter(
+                time,
+                targetTimePattern,
+                inputTimePattern
+        );
+        return dateTime;
+    }
+
+    private String simpleDateFormatter(String input, String targetPattern, String inputPattern){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(inputPattern, Locale.ENGLISH);
         Date date;
-        try {
-             date = original.parse(updatedDate);
-        } catch (ParseException e) {
+        try{
+            date = simpleDateFormat.parse(input);
+        }catch (ParseException e) {
             e.printStackTrace();
-            return updatedDate;
+            return input;
         }
-        time = target.format(date);
-        return time;
+        simpleDateFormat = new SimpleDateFormat(targetPattern, Locale.ENGLISH);
+        assert date != null;
+        return simpleDateFormat.format(date);
     }
 
     @Override
