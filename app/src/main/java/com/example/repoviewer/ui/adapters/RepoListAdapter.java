@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.repoviewer.R;
 import com.example.repoviewer.data.model.Repository;
 
-import org.w3c.dom.Text;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,7 +65,7 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
                 date,
                 targetDatePattern,
                 inputDatePattern
-        ) + simpleDateFormatter(
+        ) + " " + simpleDateFormatter(
                 time,
                 targetTimePattern,
                 inputTimePattern
