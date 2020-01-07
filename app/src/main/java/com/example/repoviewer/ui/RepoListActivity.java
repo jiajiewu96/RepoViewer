@@ -168,7 +168,7 @@ public class RepoListActivity extends AppCompatActivity implements SharedPrefere
         if (!mAccessToken.equals(Consts.ACCESS_TOKEN_NULL)) {
             sFragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .add(R.id.repo_list_container, mRepoListFragment)
+                    .add(R.id.repo_list_fragment_container, mRepoListFragment)
                     .commit();
             getUserLogin(mAccessToken);
         }
