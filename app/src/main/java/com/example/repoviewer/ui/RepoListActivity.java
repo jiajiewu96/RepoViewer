@@ -30,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RepoListActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class RepoListActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, RepoListFragment.OnRepoClickListener{
 
     private final FragmentManager sFragmentManager = getSupportFragmentManager();
 
@@ -254,5 +254,10 @@ public class RepoListActivity extends AppCompatActivity implements SharedPrefere
         if(s.equals(Consts.USER_NAME_KEY)) {
             getRepoList();
         }
+    }
+
+    @Override
+    public void onRepoSelected(Repository repository) {
+
     }
 }

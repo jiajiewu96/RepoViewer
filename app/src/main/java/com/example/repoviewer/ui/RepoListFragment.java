@@ -24,19 +24,35 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RepoListFragment extends Fragment implements RepoListAdapter.RepoClickHandler{
+public class RepoListFragment extends Fragment implements RepoListAdapter.RepoClickHandler {
 
     private Context mContext;
     private RepoListAdapter mRepoListAdapter;
     private TextView mErrorTextView;
+    private OnRepoClickListener mOnRepoClickListener;
 
-    public static RepoListFragment newInstance(){
+    public static RepoListFragment newInstance() {
         return new RepoListFragment();
+    }
+
+    @Override
+    public void onRepoClick(Repository repository) {
+        mOnRepoClickListener.onRepoSelected(repository);
+    }
+
+    public interface OnRepoClickListener {
+        void onRepoSelected(Repository repository);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            mOnRepoClickListener = (OnRepoClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "Must Implement OnRepoClickListener");
+        }
         mContext = getContext();
     }
 
@@ -63,17 +79,15 @@ public class RepoListFragment extends Fragment implements RepoListAdapter.RepoCl
         repoRecyclerView.setAdapter(mRepoListAdapter);
     }
 
-    public void setRepoList(ArrayList<Repository> repositories){
+    public void setRepoList(ArrayList<Repository> repositories) {
         mErrorTextView.setVisibility(View.GONE);
         mRepoListAdapter.setRepositories(repositories);
     }
-    public void setErrorTextView(String error){
+
+    public void setErrorTextView(String error) {
         mErrorTextView.setVisibility(View.VISIBLE);
         mErrorTextView.setText(error);
     }
 
-    @Override
-    public void onRepoClick(Repository repository) {
-        Toast.makeText(mContext, "Successful Click", Toast.LENGTH_SHORT).show();
-    }
+
 }
