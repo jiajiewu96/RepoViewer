@@ -22,13 +22,20 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
 
     private ArrayList<Repository> mRepositories;
 
+    private final RepoClickHandler mRepoClickHandler;
+
+    public interface RepoClickHandler{
+        void onRepoClick(Repository repository);
+    }
+
     public void setRepositories(ArrayList<Repository> repositories){
         mRepositories = repositories;
         notifyDataSetChanged();
     }
 
-    public RepoListAdapter(){
+    public RepoListAdapter(RepoClickHandler repoClickHandler){
         mRepositories = new ArrayList<>();
+        mRepoClickHandler = repoClickHandler;
     }
 
     @NonNull
@@ -96,7 +103,7 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
         return string == null || string.isEmpty();
     }
 
-    class RepoListViewHolder extends RecyclerView.ViewHolder{
+    class RepoListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView repoName;
         TextView repoDescription;
         TextView repoUpdated;
@@ -106,6 +113,13 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.RepoLi
             repoName = (TextView) itemView.findViewById(R.id.tv_repo_name);
             repoDescription = (TextView) itemView.findViewById(R.id.tv_repo_description);
             repoUpdated = (TextView) itemView.findViewById(R.id.tv_repo_updated);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int adapterPosition = getAdapterPosition();
+            mRepoClickHandler.onRepoClick(mRepositories.get(adapterPosition));
         }
     }
 }

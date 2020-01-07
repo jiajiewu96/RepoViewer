@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.repoviewer.R;
 import com.example.repoviewer.data.model.Repository;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RepoListFragment extends Fragment {
+public class RepoListFragment extends Fragment implements RepoListAdapter.RepoClickHandler{
 
     private Context mContext;
     private RepoListAdapter mRepoListAdapter;
@@ -56,7 +57,7 @@ public class RepoListFragment extends Fragment {
     private void setupRecyclerViews(View rootView) {
         RecyclerView repoRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_repo_list);
         mErrorTextView = rootView.findViewById(R.id.tv_error);
-        mRepoListAdapter = new RepoListAdapter();
+        mRepoListAdapter = new RepoListAdapter(this);
         LinearLayoutManager repoListLayoutManager = new LinearLayoutManager(getActivity());
         repoRecyclerView.setLayoutManager(repoListLayoutManager);
         repoRecyclerView.setAdapter(mRepoListAdapter);
@@ -69,5 +70,10 @@ public class RepoListFragment extends Fragment {
     public void setErrorTextView(String error){
         mErrorTextView.setVisibility(View.VISIBLE);
         mErrorTextView.setText(error);
+    }
+
+    @Override
+    public void onRepoClick(Repository repository) {
+        Toast.makeText(mContext, "Successful Click", Toast.LENGTH_SHORT).show();
     }
 }
