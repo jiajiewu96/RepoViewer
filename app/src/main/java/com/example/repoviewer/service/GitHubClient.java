@@ -36,4 +36,10 @@ public interface GitHubClient {
             @Query("sort") String sort,
             @Query("direction") String direction
     );
+
+    @GET("/repo/{owner}/{repo}/commits")
+    Call<List<Repository>>getCommitList(
+            @Path("owner") String owner,
+            @Path("repo") String repo
+    );
 }
